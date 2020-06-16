@@ -1,7 +1,6 @@
 pipeline{
     agent any
     stages{
-
         stage("Build Backend"){
             steps{
                 bat 'mvn clean package -DskipTests=true'
@@ -13,18 +12,15 @@ pipeline{
             }
         }
         stage("Sonar Analysis"){
-            steps{
-                bat 'C:/Users/"Rodrigo Pereira"/.jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SONAR_SCANNER/bin/sonar-scanner -e -Dsonar.projectKey=DeployBack -Dsonar.host.url=http://localhost:9000 -Dsonar.login=751c7ee18731988a6b6ffe8a357f9f667823d913 -Dsonar.java.binaries=target'
+            environment{
+                scannerHome = tool 'SONAR_SCANNER'
             }
-        }
-        stage("Quality Gate"){
             steps{
-                timeout(time: 1, unit: 'MINUTES'){
-                WaitForQualityGate aborted: true
+                withSonarQubeEnv('SONAR_LOCAL'){
+                    bat "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=DeployBack -Dsonar.host.url=http://localhost:9000 -Dsonar.login=751c7ee18731988a6b6ffe8a357f9f667823d913 -Dsonar.java.binaries=target"
                 }
             }
-        }
-
+        }        
     }
 }
 
