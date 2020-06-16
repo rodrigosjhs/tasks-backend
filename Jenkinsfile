@@ -15,7 +15,15 @@ pipeline{
             steps{
                 bat 'C:/Users/"Rodrigo Pereira"/.jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/SONAR_SCANNER/bin/sonar-scanner -e -Dsonar.projectKey=DeployBack -Dsonar.host.url=http://localhost:9000 -Dsonar.login=751c7ee18731988a6b6ffe8a357f9f667823d913 -Dsonar.java.binaries=target'
             }
-        }        
+        }
+        stage("Quality Gate"){
+            steps{
+                timeout(time: 1, unit: 'MINUTES'){
+                WaitForQualityGateStep abortPipeline: true
+                }
+            }
+        }
+
     }
 }
 
