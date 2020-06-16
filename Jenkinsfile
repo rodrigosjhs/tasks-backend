@@ -1,6 +1,7 @@
 pipeline{
     agent any
     stages{
+
         stage("Build Backend"){
             steps{
                 bat 'mvn clean package -DskipTests=true'
@@ -19,7 +20,7 @@ pipeline{
         stage("Quality Gate"){
             steps{
                 timeout(time: 1, unit: 'MINUTES'){
-                WaitForQualityGateStep abortPipeline: true
+                WaitForQualityGate abortedPipeline: true
                 }
             }
         }
